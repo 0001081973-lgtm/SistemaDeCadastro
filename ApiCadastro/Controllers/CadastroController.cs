@@ -19,7 +19,8 @@ namespace ApiCadastro.Controllers
             _db = db;
             _config = config;
         }
-
+        
+        //Comentario
         // recebe um novo cadastro, gera notificacao e salva no banco
         [HttpPost]
         public async Task<IActionResult> Cadastrar(CadastroData cadastro)
