@@ -1,0 +1,73 @@
+<Window x:Class="CadastroInterface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CadastroInterface"
+        mc:Ignorable="d"
+        Title="Sistema de Cadastro e Notificação" Height="580" Width="880">
+
+    <StackPanel Margin="10">
+
+        <TextBlock Text="Sistema de Cadastro - Serviço de Notificação"
+                   FontSize="15"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10"/>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Atualizar Cadastros"
+                    Margin="6"
+                    Command="{Binding CarregarCadastrosCommand}"/>
+            <Button Content="Atualizar Notificações"
+                    Margin="6"
+                    Command="{Binding CarregarNotificacoesCommand}"/>
+        </StackPanel>
+
+        <TextBlock Text="Cadastros:" FontWeight="Bold" Margin="6,8,6,2"/>
+        <ListView Margin="6"
+                  Height="190"
+                  ItemsSource="{Binding Cadastros}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" Width="40"
+                                    DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Nome" Width="160"
+                                    DisplayMemberBinding="{Binding Nome}"/>
+                    <GridViewColumn Header="Email" Width="200"
+                                    DisplayMemberBinding="{Binding Email}"/>
+                    <GridViewColumn Header="Telefone" Width="120"
+                                    DisplayMemberBinding="{Binding Telefone}"/>
+                    <GridViewColumn Header="Departamento" Width="100"
+                                    DisplayMemberBinding="{Binding Departamento}"/>
+                    <GridViewColumn Header="Timestamp" Width="140"
+                                    DisplayMemberBinding="{Binding Timestamp}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <TextBlock Text="Notificações geradas:" FontWeight="Bold" Margin="6,8,6,2"/>
+        <ListView Margin="6"
+                  Height="170"
+                  ItemsSource="{Binding Notificacoes}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" Width="40"
+                                    DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Destinatário" Width="150"
+                                    DisplayMemberBinding="{Binding NomeDestinatario}"/>
+                    <GridViewColumn Header="Email" Width="190"
+                                    DisplayMemberBinding="{Binding Email}"/>
+                    <GridViewColumn Header="Mensagem" Width="280"
+                                    DisplayMemberBinding="{Binding Mensagem}"/>
+                    <GridViewColumn Header="Status" Width="70"
+                                    DisplayMemberBinding="{Binding Status}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <TextBlock Text="{Binding Status}"
+                   Margin="6,4,6,0"
+                   Foreground="Gray"/>
+
+    </StackPanel>
+</Window>
