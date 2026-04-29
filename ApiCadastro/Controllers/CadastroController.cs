@@ -1,5 +1,6 @@
 using ApiCadastro.Config;
 using ApiCadastro.Data;
+using ApiCadastro.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -19,37 +20,32 @@ namespace ApiCadastro.Controllers
             _db = db;
             _config = config;
         }
-        
-        //Comentario
-        // recebe um novo cadastro, gera notificacao e salva no banco
+
+        // recebe o DTO, converte para a entidade e salva no banco
         [HttpPost]
-        public async Task<IActionResult> Cadastrar(CadastroData cadastro)
+        public async Task<IActionResult> Cadastrar(CadastroDTO dto)
         {
-            if (string.IsNullOrEmpty(cadastro.Nome))
+            if (string.IsNullOrEmpty(dto.Nome))
             {
                 return BadRequest("Nome nao pode ser vazio!");
             }
 
-            if (string.IsNullOrEmpty(cadastro.Email))
+            if (string.IsNullOrEmpty(dto.Email))
             {
                 return BadRequest("Email nao pode ser vazio!");
             }
 
-            cadastro.Timestamp = DateTime.Now;
-            _db.Cadastros.Add(cadastro);
-            await _db.SaveChangesAsync();
-
-            // gera a notificacao automaticamente apos o cadastro
-            var notificacao = new NotificacaoData
+            // converte o DTO para a entidade
+            var cadastro = new CadastroData
             {
-                CadastroId = cadastro.Id,
-                NomeDestinatario = cadastro.Nome,
-                Email = cadastro.Email,
-                Mensagem = $"Bem-vindo(a) {cadastro.Nome}! Seu cadastro foi realizado com sucesso.",
-                Status = "Enviado",
+                Nome = dto.Nome,
+                Email = dto.Email,
+                Telefone = dto.Telefone,
+                Departamento = dto.Departamento,
                 Timestamp = DateTime.Now
             };
-            _db.Notificacoes.Add(notificacao);
+
+            _db.Cadastros.Add(cadastro);
             await _db.SaveChangesAsync();
 
             return Ok(cadastro);
@@ -75,9 +71,9 @@ namespace ApiCadastro.Controllers
             return Ok(cadastro);
         }
 
-        // atualiza um cadastro existente
+        // atualiza um cadastro existente usando DTO
         [HttpPut("{id}")]
-        public async Task<IActionResult> Atualizar(int id, CadastroData atualizado)
+        public async Task<IActionResult> Atualizar(int id, CadastroDTO dto)
         {
             var cadastro = await _db.Cadastros.FindAsync(id);
             if (cadastro == null)
@@ -85,10 +81,10 @@ namespace ApiCadastro.Controllers
                 return NotFound("Cadastro nao encontrado!");
             }
 
-            cadastro.Nome = atualizado.Nome;
-            cadastro.Email = atualizado.Email;
-            cadastro.Telefone = atualizado.Telefone;
-            cadastro.Departamento = atualizado.Departamento;
+            cadastro.Nome = dto.Nome;
+            cadastro.Email = dto.Email;
+            cadastro.Telefone = dto.Telefone;
+            cadastro.Departamento = dto.Departamento;
             await _db.SaveChangesAsync();
 
             return Ok(cadastro);
