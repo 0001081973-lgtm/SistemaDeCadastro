@@ -57,7 +57,7 @@ namespace CadastroInterface.Model
             Status = "Carregando cadastros...";
             var http = new HttpClient();
             var dados = await http.GetFromJsonAsync<List<CadastroData>>(
-                "https://localhost:7210/api/v1/cadastros");
+                "https://localhost:44320/api/v1/cadastros");
 
             Cadastros.Clear();
             foreach (var cadastro in dados)

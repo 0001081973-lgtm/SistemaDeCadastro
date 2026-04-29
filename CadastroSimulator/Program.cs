@@ -32,7 +32,7 @@ while (true)
     SalvarLocal(cadastro);
 
     var response = await http.PostAsJsonAsync(
-        "https://localhost:7210/api/v1/cadastros", cadastro);
+        "https://localhost:44320/api/v1/cadastros", cadastro);
 
     if (!response.IsSuccessStatusCode)
     {
