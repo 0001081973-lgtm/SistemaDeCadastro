@@ -1,7 +1,7 @@
 using CadastroInterface.Command;
+using CadastroInterface.DTO;
 using CadastroInterface.ViewModels;
 using Microsoft.Data.Sqlite;
-using Shared;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,8 +19,7 @@ namespace CadastroInterface.Model
         /// <summary>
         /// Atributos gerais de binding
         /// </summary>
-        public ObservableCollection<CadastroData> Cadastros { get; set; }
-        public ObservableCollection<NotificacaoData> Notificacoes { get; set; }
+        public ObservableCollection<CadastroDTO> Cadastros { get; set; }
 
         private string _status = "";
         public string Status
@@ -37,16 +36,13 @@ namespace CadastroInterface.Model
         /// Comandos
         /// </summary>
         public ICommand CarregarCadastrosCommand { get; }
-        public ICommand CarregarNotificacoesCommand { get; }
 
         public MainViewModel()
         {
-            Cadastros = new ObservableCollection<CadastroData>();
-            Notificacoes = new ObservableCollection<NotificacaoData>();
+            Cadastros = new ObservableCollection<CadastroDTO>();
 
             //comandos
             CarregarCadastrosCommand = new RelayCommand(CarregarCadastros);
-            CarregarNotificacoesCommand = new RelayCommand(CarregarNotificacoes);
 
             //cria o banco local da interface
             CriarBanco();
@@ -56,8 +52,8 @@ namespace CadastroInterface.Model
         {
             Status = "Carregando cadastros...";
             var http = new HttpClient();
-            var dados = await http.GetFromJsonAsync<List<CadastroData>>(
-                "https://localhost:44320/api/v1/cadastros");
+            var dados = await http.GetFromJsonAsync<List<CadastroDTO>>(
+                "https://localhost:7210/api/v1/cadastros");
 
             Cadastros.Clear();
             foreach (var cadastro in dados)
@@ -67,22 +63,6 @@ namespace CadastroInterface.Model
             }
 
             Status = $"Total carregado: {dados.Count} registros";
-        }
-
-        private async void CarregarNotificacoes()
-        {
-            Status = "Carregando notificacoes...";
-            var http = new HttpClient();
-            var dados = await http.GetFromJsonAsync<List<NotificacaoData>>(
-                "https://localhost:7210/api/v1/notificacoes");
-
-            Notificacoes.Clear();
-            foreach (var notificacao in dados)
-            {
-                Notificacoes.Add(notificacao);
-            }
-
-            Status = $"Total de notificacoes: {dados.Count}";
         }
 
         private void CriarBanco()
@@ -101,7 +81,7 @@ namespace CadastroInterface.Model
             cmd.ExecuteNonQuery();
         }
 
-        private void SalvarLocal(CadastroData cadastro)
+        private void SalvarLocal(CadastroDTO cadastro)
         {
             using var conn = new SqliteConnection("Data Source=interface_log.db");
             conn.Open();
