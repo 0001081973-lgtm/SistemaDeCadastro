@@ -21,8 +21,16 @@ namespace ApiCadastro.Controllers
             _config = config;
         }
 
-        // recebe o DTO, converte para a entidade e salva no banco
+        /// <summary>
+        /// Cadastra um novo usuario no sistema e salva no banco de dados.
+        /// </summary>
+        /// <param name="dto">Dados do cadastro recebidos pela requisicao</param>
+        /// <returns>Retorna o cadastro criado com o ID gerado</returns>
+        /// <response code="200">Cadastro realizado com sucesso</response>
+        /// <response code="400">Nome ou Email nao podem ser vazios</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Cadastrar(CadastroDTO dto)
         {
             if (string.IsNullOrEmpty(dto.Nome))
@@ -51,16 +59,29 @@ namespace ApiCadastro.Controllers
             return Ok(cadastro);
         }
 
-        // lista todos os cadastros salvos
+        /// <summary>
+        /// Lista todos os cadastros salvos no banco de dados.
+        /// </summary>
+        /// <returns>Retorna uma lista com todos os cadastros</returns>
+        /// <response code="200">Lista retornada com sucesso</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Listar()
         {
             var dados = await _db.Cadastros.ToListAsync();
             return Ok(dados);
         }
 
-        // busca cadastro por id
+        /// <summary>
+        /// Busca um cadastro especifico pelo ID.
+        /// </summary>
+        /// <param name="id">ID do cadastro a ser buscado</param>
+        /// <returns>Retorna o cadastro correspondente ao ID informado</returns>
+        /// <response code="200">Cadastro encontrado com sucesso</response>
+        /// <response code="404">Cadastro nao encontrado</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> BuscarPorId(int id)
         {
             var cadastro = await _db.Cadastros.FindAsync(id);
@@ -71,8 +92,17 @@ namespace ApiCadastro.Controllers
             return Ok(cadastro);
         }
 
-        // atualiza um cadastro existente usando DTO
+        /// <summary>
+        /// Atualiza os dados de um cadastro existente.
+        /// </summary>
+        /// <param name="id">ID do cadastro a ser atualizado</param>
+        /// <param name="dto">Novos dados para atualizar o cadastro</param>
+        /// <returns>Retorna o cadastro com os dados atualizados</returns>
+        /// <response code="200">Cadastro atualizado com sucesso</response>
+        /// <response code="404">Cadastro nao encontrado</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Atualizar(int id, CadastroDTO dto)
         {
             var cadastro = await _db.Cadastros.FindAsync(id);
@@ -90,8 +120,16 @@ namespace ApiCadastro.Controllers
             return Ok(cadastro);
         }
 
-        // deleta um cadastro pelo id
+        /// <summary>
+        /// Remove um cadastro do banco de dados pelo ID.
+        /// </summary>
+        /// <param name="id">ID do cadastro a ser removido</param>
+        /// <returns>Retorna mensagem de confirmacao da remocao</returns>
+        /// <response code="200">Cadastro deletado com sucesso</response>
+        /// <response code="404">Cadastro nao encontrado</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Deletar(int id)
         {
             var cadastro = await _db.Cadastros.FindAsync(id);
